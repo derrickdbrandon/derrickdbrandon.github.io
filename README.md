@@ -1,3 +1,1 @@
 # derrickdbrandon.github.io
-
-☺
