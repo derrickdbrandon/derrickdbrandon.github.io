@@ -1,0 +1,70 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #9f8f92;
+  margin: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.link:hover,
+.name:hover {
+  color: white;
+  cursor: pointer;
+  -moz-transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
+  -webkit-transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
+  -o-transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
+  transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
+  text-shadow: 0 0 20px #fff;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.container > * {
+  flex-basis: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.header > * {
+  margin: 0;
+}
+
+.name,
+.city {
+  font-weight: 500;
+}
+
+.bio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  line-height: 1.75;
+}
