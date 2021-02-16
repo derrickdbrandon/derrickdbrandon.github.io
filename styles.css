@@ -18,6 +18,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.container > * {
+  flex-basis: 100%;
+}
 
 .link {
   text-decoration: none;
@@ -33,18 +42,6 @@ body {
   -o-transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
   transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
   text-shadow: 0 0 20px #fff;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-}
-
-.container > * {
-  flex-basis: 100%;
 }
 
 .header {
