@@ -10,11 +10,13 @@ body {
 }
 
 body {
-  background-color: #9f8f92;
+  background-color: #efefef;
+  color: #c74954;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 2rem;
   font-weight: 400;
   margin: 0;
+  padding: 60px 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -29,19 +31,18 @@ body {
 }
 
 .link {
+  border-bottom: 0.2rem solid transparent;
+  color: #c74954;
   text-decoration: none;
-  color: black;
 }
 
-.link:hover,
-.name:hover {
-  color: white;
+.link:hover {
+  border-bottom: 0.2rem solid #c74954;
   cursor: pointer;
-  -moz-transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
-  -webkit-transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
-  -o-transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
-  transition: color 250ms ease-in-out, text-shadow 250ms ease-in-out;
-  text-shadow: 0 0 20px #fff;
+  -moz-transition: border-bottom 250ms ease;
+  -webkit-transition: border-bottom 250ms ease;
+  -o-transition: border-bottom 250ms ease;
+  transition: border-bottom 250ms ease;
 }
 
 .header {
@@ -75,6 +76,7 @@ body {
 @media (max-width: 800px) {
   body {
     font-size: 1.75rem;
+    text-align: center;
   }
 }
 
