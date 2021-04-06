@@ -38,7 +38,7 @@ body {
 
 .link:hover {
   border-bottom: 0.2rem solid #c74954;
-  cursor: pointer;
+  cursor: alias;
   -moz-transition: border-bottom 250ms ease;
   -webkit-transition: border-bottom 250ms ease;
   -o-transition: border-bottom 250ms ease;
