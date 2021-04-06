@@ -16,7 +16,7 @@ body {
   font-size: 2rem;
   font-weight: 400;
   margin: 0;
-  padding: 60px 20px;
+  padding: 60px 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -70,7 +70,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  line-height: 1.75;
 }
 
 @media (max-width: 800px) {
