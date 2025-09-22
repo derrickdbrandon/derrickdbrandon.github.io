@@ -1,38 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="Description" content="Derrick Brandon Software Engineer" />
-    <link rel="icon" href="favicon.ico" type="image/ico" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Derrick Brandon</title>
-  </head>
-  <body class="container">
-    <header class="header">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Derrick Brandon</title>
+  <meta name="description" content="Derrick Brandon - software engineer." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #fafafa;
+      font-family: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #0f0f11;
+      font-size: 24px;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+      position: relative;
+    }
+    a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      width: 100%;
+      height: 2px;
+      background: #0f0f11;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+      opacity: 0.6;
+    }
+    a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .wrap {
+      padding: 2vw;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 2vw;
+    }
+
+    .photo {
+      order: 1;
+      flex: 1 1 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+    .photo img {
+      width: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .text-block {
+      order: 2;
+      flex: 1 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .name {
+      font-size: 2.5rem;
+      font-weight: 500;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .city {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5c606b;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: #5c606b;
+      margin-bottom: 0.5rem;
+    }
+
+    .intro {
+      font-size: 1.05rem;
+      margin: 0 0 .5rem 0;
+    }
+
+    .tools {
+      width: 50%;
+      font-size: 0.6rem;
+      color: #5c606b;
+    }
+
+    .tools h2 {
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .tools ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tools li {
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 768px) {
+      html, body {
+        font-size: 18px;
+      }
+      .wrap {
+        flex-direction: column;
+        align-items: center;
+      }
+      .text-block {
+        order: 1;
+      }
+      .intro {
+        font-size: 1rem;
+      }
+      .photo {
+        order: 2;
+      }
+      .tools {
+        width: 100%;
+        margin: 0 0 .5rem 0;
+        font-size: .75rem;
+      }
+      .tools h2 {
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="text-block">
       <h1 class="name">Derrick Brandon</h1>
-      <h2 class="city">Brooklyn, NY</h2>
-    </header>
-    <section class="bio">
-      <p>
-        Software engineer currently at
-        <a class="link" href="https://www.betterment.com/engineering" target="_blank"
-          >Betterment</a
-        >.
+      <div class="city">Brooklyn, NY</div>
+      <nav class="links" aria-label="Social links">
+        <a href="mailto:derrickdbrandon@gmail.com" target="_blank" rel="noopener">email</a>
+        <span aria-hidden="true">/</span>
+        <a href="https://www.linkedin.com/in/derrickdbrandon/" target="_blank" rel="noopener">linkedin</a>
+        <span aria-hidden="true">/</span>
+        <a href="https://github.com/derrickdbrandon" target="_blank" rel="noopener">github</a>
+      </nav>
+      <p class="intro">
+        Software engineer specializing in data-intensive backend systems and user-friendly interfaces. Currently at
+        <a href="https://www.betterment.com/engineering" target="_blank" rel="noopener">Betterment</a>.
       </p>
-    </section>
-    <footer class="footer">
-      <a class="link" href="mailto:derrickdbrandon@gmail.com" target="_blank"
-        >email</a
-      >&nbsp;/&nbsp;
-      <a class="link" href="https://www.linkedin.com/in/derrickdbrandon/" target="_blank"
-	>linkedin</a
-      >&nbsp;/&nbsp;
-      <a class="link" href="https://github.com/derrickdbrandon" target="_blank"
-        >github</a
-      >
-    </footer>
-  </body>
+      <div class="tools">
+        <h2>Tools</h2>
+        <ul>
+          <li>React</li>
+          <li>TypeScript</li>
+          <li>Ruby on Rails</li>
+          <li>PostgreSQL</li>
+          <li>GraphQL</li>
+          <li>Node.js</li>
+        </ul>
+      </div>
+    </div>
+    <figure class="photo">
+      <img id="randomPhoto" src="" alt="Random photo I took" title="" />
+    </figure>
+  </main>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('loaded');
+      const images = [
+        { src: "assets/images/17730028.webp", alt: "Dogs on a roof in Isla Mujeres, Mexico" },
+        { src: "assets/images/48140004.webp", alt: "View from Villa Cimbrone Gardens in Ravello, Italy" },
+        { src: "assets/images/48140007.webp", alt: "Statue in Villa Cimbrone Gardens in Ravello, Italy" },
+        { src: "assets/images/48140018.webp", alt: "Amalfi Coast in Italy" },
+        { src: "assets/images/48140025.webp", alt: "Red truck in Italy" },
+        { src: "assets/images/86260014.webp", alt: "Zion National Park in Utah, USA" },
+        { src: "assets/images/86260037.webp", alt: "Bryce Canyon National Park in Utah, USA" },
+        { src: "assets/images/90460006.webp", alt: "My guitar lying on the ground during a Rozwell Kid rehearsal" },
+        { src: "assets/images/96770024.webp", alt: "Kamasi Washington performing in Manchester, UK" },
+        { src: "assets/images/96780009.webp", alt: "View in Barcelona near Park Güell" },
+        { src: "assets/images/96780020.webp", alt: "Orange tree in alleyway in Barcelona, Spain" }
+      ];
+      const pick = images[Math.floor(Math.random() * images.length)];
+      const element = document.getElementById('randomPhoto');
+      element.src = pick.src;
+      element.alt = pick.alt;
+      element.title = pick.alt;
+    });
+  </script>
+</body>
 </html>
