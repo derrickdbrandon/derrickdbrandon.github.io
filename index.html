@@ -98,16 +98,21 @@
       flex: 1 1 4rem;
       min-width: 0;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      gap: 0.4rem;
       margin: 0;
     }
-    .photo img {
+    .photo-frame {
+      position: relative;
       width: 100%;
-      height: auto;
-      max-width: 100%;
-      min-width: 0;
       aspect-ratio: 3 / 2;
+    }
+    /* Two stacked images: the incoming one fades in on top of the current. */
+    .photo img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       display: block;
       opacity: 0;
@@ -115,6 +120,25 @@
     }
     .photo img.is-ready {
       opacity: 1;
+    }
+    .photo img.is-front {
+      z-index: 1;
+    }
+    .slideshow-toggle {
+      align-self: flex-end;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      font-size: 0.6rem;
+      color: #5c606b;
+      cursor: pointer;
+      animation: fade-in 0.8s ease 0.75s both;
+    }
+    .slideshow-toggle:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 3px;
+      border-radius: 1px;
     }
 
     /* Fade the text in top to bottom, then the photo (timed in the script).
@@ -250,7 +274,11 @@
       </div>
     </div>
     <figure class="photo">
-      <img id="randomPhoto" width="1200" height="800" decoding="async" alt="" />
+      <div class="photo-frame">
+        <img width="1200" height="800" decoding="async" alt="" />
+        <img width="1200" height="800" decoding="async" alt="" aria-hidden="true" />
+      </div>
+      <button type="button" class="slideshow-toggle" hidden>pause<span class="sr-only"> slideshow</span></button>
     </figure>
     <script>
       const images = [
@@ -269,22 +297,78 @@
         { src: "assets/images/98160019.webp", alt: "Basketball hoop in Bergen, Norway" },
         { src: "assets/images/98170037.webp", alt: "Fugleøen, the bird island in Copenhagen's lakes, Denmark" }
       ];
-      const pick = images[Math.floor(Math.random() * images.length)];
-      const element = document.getElementById('randomPhoto');
-      // Fade in after the text, or as soon as it loads if that is later. The
-      // double rAF makes sure a transparent frame is painted first, so cached
-      // images still fade instead of popping in.
+      const SLIDE_MS = 6000;
+      const FADE_MS = 1000;
+      // Fade in after the text, or as soon as it loads if that is later.
       const PHOTO_TURN_MS = 750;
-      const show = () => requestAnimationFrame(() =>
-        requestAnimationFrame(() => element.classList.add('is-ready')));
-      const reveal = () => setTimeout(show, Math.max(0, PHOTO_TURN_MS - performance.now()));
-      element.alt = pick.alt;
-      element.title = pick.alt;
-      element.src = pick.src;
+
+      // Shuffle so every visit starts somewhere different and shows each photo once per loop.
+      const order = images.slice();
+      for (let i = order.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+
+      let [front, back] = document.querySelectorAll('.photo-frame img');
+      const toggle = document.querySelector('.slideshow-toggle');
+      let index = 0;
+      let timer = null;
+      // Auto-advancing content can bother people who ask for reduced motion, so start paused for them.
+      let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       // decode() resolves once the image is ready to paint, not just downloaded,
-      // so the fade never runs on an empty box. Still reveal on failure so the
-      // alt text is visible instead of a blank box.
-      element.decode().then(reveal, reveal);
+      // so a fade never runs on an empty box. Failures resolve too, so the alt
+      // text shows instead of a blank frame.
+      const load = (img, photo) => {
+        img.alt = photo.alt;
+        img.title = photo.alt;
+        img.src = photo.src;
+        return img.decode().catch(() => {});
+      };
+      // The double rAF makes sure a transparent frame is painted first, so
+      // cached images still fade instead of popping in.
+      const nextFrame = () => new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+      const schedule = () => {
+        clearTimeout(timer);
+        if (!paused && !document.hidden) timer = setTimeout(advance, SLIDE_MS);
+      };
+
+      async function advance() {
+        index = (index + 1) % order.length;
+        await load(back, order[index]);
+        await nextFrame();
+        back.classList.add('is-front', 'is-ready');
+        back.removeAttribute('aria-hidden');
+        front.classList.remove('is-front');
+        front.setAttribute('aria-hidden', 'true');
+        const previous = front;
+        [front, back] = [back, front];
+        // Hide the old photo only once the new one fully covers it.
+        setTimeout(() => previous.classList.remove('is-ready'), FADE_MS);
+        schedule();
+      }
+
+      const renderToggle = () => {
+        toggle.firstChild.textContent = paused ? 'play' : 'pause';
+      };
+      toggle.addEventListener('click', () => {
+        paused = !paused;
+        renderToggle();
+        schedule();
+      });
+      document.addEventListener('visibilitychange', schedule);
+
+      load(front, order[0]).then(() => {
+        setTimeout(async () => {
+          await nextFrame();
+          front.classList.add('is-front', 'is-ready');
+          schedule();
+        }, Math.max(0, PHOTO_TURN_MS - performance.now()));
+      });
+      renderToggle();
+      toggle.hidden = false;
     </script>
   </main>
 </body>
