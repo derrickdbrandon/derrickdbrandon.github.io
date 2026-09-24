@@ -96,6 +96,7 @@
     .photo {
       order: 1;
       flex: 1 1 4rem;
+      min-width: 0;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -103,8 +104,22 @@
     }
     .photo img {
       width: 100%;
+      height: auto;
+      max-width: 100%;
+      min-width: 0;
+      aspect-ratio: 3 / 2;
       object-fit: cover;
       display: block;
+      background: #efefef;
+      opacity: 0;
+    }
+    .photo img.is-ready {
+      opacity: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .photo img {
+        transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+      }
     }
 
     .text-block {
@@ -182,6 +197,7 @@
       }
       .photo {
         order: 2;
+        width: 100%;
       }
       .tools {
         width: 100%;
@@ -225,12 +241,9 @@
       </div>
     </div>
     <figure class="photo">
-      <img id="randomPhoto" src="" alt="Random photo I took" title="" />
+      <img id="randomPhoto" width="1200" height="800" decoding="async" alt="" />
     </figure>
-  </main>
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      document.body.classList.add('loaded');
+    <script>
       const images = [
         { src: "assets/images/17730028.webp", alt: "Dogs on a roof in Isla Mujeres, Mexico" },
         { src: "assets/images/48140004.webp", alt: "View from Villa Cimbrone Gardens in Ravello, Italy" },
@@ -246,10 +259,15 @@
       ];
       const pick = images[Math.floor(Math.random() * images.length)];
       const element = document.getElementById('randomPhoto');
-      element.src = pick.src;
+      const reveal = () => element.classList.add('is-ready');
+      element.addEventListener('load', reveal, { once: true });
+      // Still reveal on failure so the alt text is visible instead of a blank box.
+      element.addEventListener('error', reveal, { once: true });
       element.alt = pick.alt;
       element.title = pick.alt;
-    });
-  </script>
+      element.src = pick.src;
+      if (element.complete && element.naturalWidth) reveal();
+    </script>
+  </main>
 </body>
 </html>
