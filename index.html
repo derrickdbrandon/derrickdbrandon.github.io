@@ -117,10 +117,13 @@
       object-fit: contain;
       display: block;
       opacity: 0;
-      transition: opacity 1s ease;
+      /* Fading out: slower than the fade in, so the outgoing photo lingers
+         underneath and dissolves rather than being cleared away. */
+      transition: opacity 2s ease;
     }
     .photo img.is-ready {
       opacity: 1;
+      transition: opacity 1.4s ease-in-out;
     }
     .photo img.is-front {
       z-index: 1;
@@ -323,7 +326,8 @@
         { src: "assets/images/98170037.webp", alt: "Fugleøen, the bird island in Copenhagen's lakes, Denmark" }
       ];
       const SLIDE_MS = 6000;
-      const FADE_MS = 1000;
+      // Matches the slower fade out in the CSS.
+      const FADE_MS = 2000;
       // Fade in after the text, or as soon as it loads if that is later.
       const PHOTO_TURN_MS = 750;
 
@@ -377,11 +381,9 @@
         front.setAttribute('aria-hidden', 'true');
         const previous = front;
         [front, back] = [back, front];
-        // Hide the old photo only once the new one fully covers it.
-        setTimeout(() => {
-          previous.classList.remove('is-ready');
-          busy = false;
-        }, FADE_MS);
+        // Fade the old photo out alongside the new one fading in.
+        previous.classList.remove('is-ready');
+        setTimeout(() => { busy = false; }, FADE_MS);
         schedule();
       }
 
