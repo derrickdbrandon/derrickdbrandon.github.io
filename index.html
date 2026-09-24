@@ -110,17 +110,26 @@
       aspect-ratio: 3 / 2;
       object-fit: cover;
       display: block;
-      background: #efefef;
       opacity: 0;
+      transition: opacity 1s ease;
     }
     .photo img.is-ready {
       opacity: 1;
     }
-    @media (prefers-reduced-motion: no-preference) {
-      .photo img {
-        transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-      }
+
+    /* Fade the text in top to bottom, then the photo (timed in the script).
+       Opacity only, no movement, so it is left on under reduced motion. */
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
+    .text-block > * {
+      animation: fade-in 0.8s ease both;
+    }
+    .text-block > :nth-child(2) { animation-delay: 0.15s; }
+    .text-block > :nth-child(3) { animation-delay: 0.3s; }
+    .text-block > :nth-child(4) { animation-delay: 0.45s; }
+    .text-block > :nth-child(5) { animation-delay: 0.6s; }
 
     .text-block {
       order: 2;
@@ -259,7 +268,13 @@
       ];
       const pick = images[Math.floor(Math.random() * images.length)];
       const element = document.getElementById('randomPhoto');
-      const reveal = () => element.classList.add('is-ready');
+      // Fade in after the text, or as soon as it loads if that is later. The
+      // double rAF makes sure a transparent frame is painted first, so cached
+      // images still fade instead of popping in.
+      const PHOTO_TURN_MS = 750;
+      const show = () => requestAnimationFrame(() =>
+        requestAnimationFrame(() => element.classList.add('is-ready')));
+      const reveal = () => setTimeout(show, Math.max(0, PHOTO_TURN_MS - performance.now()));
       element.addEventListener('load', reveal, { once: true });
       // Still reveal on failure so the alt text is visible instead of a blank box.
       element.addEventListener('error', reveal, { once: true });
