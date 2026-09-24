@@ -275,13 +275,13 @@
       const show = () => requestAnimationFrame(() =>
         requestAnimationFrame(() => element.classList.add('is-ready')));
       const reveal = () => setTimeout(show, Math.max(0, PHOTO_TURN_MS - performance.now()));
-      element.addEventListener('load', reveal, { once: true });
-      // Still reveal on failure so the alt text is visible instead of a blank box.
-      element.addEventListener('error', reveal, { once: true });
       element.alt = pick.alt;
       element.title = pick.alt;
       element.src = pick.src;
-      if (element.complete && element.naturalWidth) reveal();
+      // decode() resolves once the image is ready to paint, not just downloaded,
+      // so the fade never runs on an empty box. Still reveal on failure so the
+      // alt text is visible instead of a blank box.
+      element.decode().then(reveal, reveal);
     </script>
   </main>
 </body>
