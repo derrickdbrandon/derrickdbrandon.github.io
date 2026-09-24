@@ -334,7 +334,8 @@
         [order[i], order[j]] = [order[j], order[i]];
       }
 
-      let [front, back] = document.querySelectorAll('.photo-frame img');
+      const frame = document.querySelector('.photo-frame');
+      let [front, back] = frame.querySelectorAll('img');
       const toggle = document.querySelector('.slideshow-toggle');
       let index = 0;
       let timer = null;
@@ -348,7 +349,6 @@
       // text shows instead of a blank frame.
       const load = (img, photo) => {
         img.alt = photo.alt;
-        img.title = photo.alt;
         img.src = photo.src;
         return img.decode().catch(() => {});
       };
@@ -370,6 +370,8 @@
         await load(back, order[index]);
         await nextFrame();
         back.classList.add('is-front', 'is-ready');
+        // On the frame rather than the img, since the nav buttons cover the img.
+        frame.title = order[index].alt;
         back.removeAttribute('aria-hidden');
         front.classList.remove('is-front');
         front.setAttribute('aria-hidden', 'true');
@@ -403,6 +405,7 @@
         setTimeout(async () => {
           await nextFrame();
           front.classList.add('is-front', 'is-ready');
+          frame.title = order[0].alt;
           busy = false;
           schedule();
         }, Math.max(0, PHOTO_TURN_MS - performance.now()));
