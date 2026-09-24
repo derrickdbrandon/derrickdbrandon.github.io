@@ -125,8 +125,30 @@
     .photo img.is-front {
       z-index: 1;
     }
+    /* Invisible halves over the photo: left goes back, right goes forward. */
+    .slide-nav {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+      width: 50%;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+    .slide-nav.prev {
+      left: 0;
+    }
+    .slide-nav.next {
+      right: 0;
+    }
+    .slide-nav:focus-visible {
+      outline: 2px solid #0f0f11;
+      outline-offset: -4px;
+    }
     .slideshow-toggle {
-      align-self: flex-end;
+      align-self: flex-start;
       padding: 0;
       border: 0;
       background: none;
@@ -278,6 +300,8 @@
       <div class="photo-frame">
         <img width="1200" height="800" decoding="async" alt="" />
         <img width="1200" height="800" decoding="async" alt="" aria-hidden="true" />
+        <button type="button" class="slide-nav prev" aria-label="Previous photo" hidden></button>
+        <button type="button" class="slide-nav next" aria-label="Next photo" hidden></button>
       </div>
       <button type="button" class="slideshow-toggle" hidden><span aria-hidden="true">||</span><span class="sr-only">pause slideshow</span></button>
     </figure>
@@ -314,6 +338,8 @@
       const toggle = document.querySelector('.slideshow-toggle');
       let index = 0;
       let timer = null;
+      // Ignore clicks until the first photo is in and while a crossfade is running.
+      let busy = true;
       // Auto-advancing content can bother people who ask for reduced motion, so start paused for them.
       let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -333,11 +359,14 @@
 
       const schedule = () => {
         clearTimeout(timer);
-        if (!paused && !document.hidden) timer = setTimeout(advance, SLIDE_MS);
+        if (!paused && !document.hidden) timer = setTimeout(() => go(1), SLIDE_MS);
       };
 
-      async function advance() {
-        index = (index + 1) % order.length;
+      async function go(step) {
+        if (busy) return;
+        busy = true;
+        clearTimeout(timer);
+        index = (index + step + order.length) % order.length;
         await load(back, order[index]);
         await nextFrame();
         back.classList.add('is-front', 'is-ready');
@@ -347,9 +376,16 @@
         const previous = front;
         [front, back] = [back, front];
         // Hide the old photo only once the new one fully covers it.
-        setTimeout(() => previous.classList.remove('is-ready'), FADE_MS);
+        setTimeout(() => {
+          previous.classList.remove('is-ready');
+          busy = false;
+        }, FADE_MS);
         schedule();
       }
+
+      const navButtons = document.querySelectorAll('.slide-nav');
+      navButtons[0].addEventListener('click', () => go(-1));
+      navButtons[1].addEventListener('click', () => go(1));
 
       const renderToggle = () => {
         const [symbol, label] = toggle.children;
@@ -367,11 +403,13 @@
         setTimeout(async () => {
           await nextFrame();
           front.classList.add('is-front', 'is-ready');
+          busy = false;
           schedule();
         }, Math.max(0, PHOTO_TURN_MS - performance.now()));
       });
       renderToggle();
       toggle.hidden = false;
+      navButtons.forEach((button) => { button.hidden = false; });
     </script>
   </main>
 </body>
