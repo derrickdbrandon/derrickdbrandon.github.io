@@ -128,6 +128,13 @@
     .photo img.is-front {
       z-index: 1;
     }
+    /* Clicking through: the same crossfade, just quicker. */
+    .photo-frame.is-quick img {
+      transition-duration: 0.5s;
+    }
+    .photo-frame.is-quick img.is-ready {
+      transition-duration: 0.35s;
+    }
     /* Invisible halves over the photo: left goes back, right goes forward. */
     .slide-nav {
       position: absolute;
@@ -371,6 +378,8 @@
       const SLIDE_MS = 6000;
       // Matches the slower fade out in the CSS.
       const FADE_MS = 2000;
+      // Matches the quicker fade out used when clicking through.
+      const QUICK_FADE_MS = 500;
       // Fade in after the text, or as soon as it loads if that is later.
       const PHOTO_TURN_MS = 750;
 
@@ -409,12 +418,13 @@
         if (!paused && !document.hidden) timer = setTimeout(() => go(1), SLIDE_MS);
       };
 
-      async function go(step) {
+      async function go(step, quick = false) {
         if (busy) return;
         busy = true;
         clearTimeout(timer);
         index = (index + step + order.length) % order.length;
         await load(back, order[index]);
+        frame.classList.toggle('is-quick', quick);
         await nextFrame();
         back.classList.add('is-front', 'is-ready');
         // On the frame rather than the img, since the nav buttons cover the img.
@@ -426,15 +436,15 @@
         [front, back] = [back, front];
         // Fade the old photo out alongside the new one fading in.
         previous.classList.remove('is-ready');
-        setTimeout(() => { busy = false; }, FADE_MS);
+        setTimeout(() => { busy = false; }, quick ? QUICK_FADE_MS : FADE_MS);
         schedule();
       }
 
       const navButtons = document.querySelectorAll('.slide-nav');
-      navButtons[0].addEventListener('click', () => go(-1));
-      navButtons[1].addEventListener('click', () => go(1));
+      navButtons[0].addEventListener('click', () => go(-1, true));
+      navButtons[1].addEventListener('click', () => go(1, true));
       document.querySelectorAll('.control.step').forEach((button) => {
-        button.addEventListener('click', () => go(Number(button.dataset.step)));
+        button.addEventListener('click', () => go(Number(button.dataset.step), true));
       });
 
       const renderToggle = () => {
