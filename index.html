@@ -162,7 +162,7 @@
       display: flex;
       align-items: center;
       gap: 0.15rem;
-      animation: fade-in 0.8s ease 0.75s both;
+      animation: fade-in 0.8s ease 0.6s both;
     }
     .controls[hidden] {
       display: none;
@@ -202,7 +202,6 @@
     .text-block > :nth-child(2) { animation-delay: 0.15s; }
     .text-block > :nth-child(3) { animation-delay: 0.3s; }
     .text-block > :nth-child(4) { animation-delay: 0.45s; }
-    .text-block > :nth-child(5) { animation-delay: 0.6s; }
 
     .text-block {
       order: 2;
@@ -240,29 +239,6 @@
       margin: 0 0 .5rem 0;
     }
 
-    .tools {
-      width: 50%;
-      font-size: 0.6rem;
-      color: #5c606b;
-    }
-
-    .tools h2 {
-      font-size: 0.8rem;
-      font-weight: 500;
-      margin: 0;
-    }
-
-    .tools ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .tools li {
-      margin: 0;
-      line-height: 1.4;
-    }
-
     @media (max-width: 768px) {
       html, body {
         font-size: 18px;
@@ -293,15 +269,6 @@
         width: 1.7em;
         height: 1.7em;
       }
-      .tools {
-        width: 100%;
-        margin: 0 0 .5rem 0;
-        font-size: .75rem;
-      }
-      .tools h2 {
-        font-size: 0.9rem;
-        font-weight: 500;
-      }
     }
   </style>
 </head>
@@ -322,17 +289,6 @@
         Software engineer turning data-intensive backend systems into products that are easy to use. Currently at
         <a href="https://www.betterment.com/engineering" target="_blank" rel="noopener">Betterment<span class="sr-only"> (opens in new tab)</span></a>.
       </p>
-      <div class="tools">
-        <h2 id="tools-heading">Tools</h2>
-        <ul aria-labelledby="tools-heading">
-          <li>React</li>
-          <li>TypeScript</li>
-          <li>Ruby on Rails</li>
-          <li>PostgreSQL</li>
-          <li>GraphQL</li>
-          <li>Node.js</li>
-        </ul>
-      </div>
     </div>
     <figure class="photo">
       <div class="photo-frame">
@@ -381,7 +337,7 @@
       // Matches the quicker fade out used when clicking through.
       const QUICK_FADE_MS = 500;
       // Fade in after the text, or as soon as it loads if that is later.
-      const PHOTO_TURN_MS = 750;
+      const PHOTO_TURN_MS = 600;
 
       // Shuffle so every visit starts somewhere different and shows each photo once per loop.
       const order = images.slice();
