@@ -355,6 +355,8 @@
       let timer = null;
       // Ignore clicks until the first photo is in and while a crossfade is running.
       let busy = true;
+      // Steps tapped during a crossfade, applied together once it finishes.
+      let pending = 0;
       // Auto-advancing content can bother people who ask for reduced motion, so start paused for them.
       let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -377,10 +379,13 @@
       };
 
       async function go(step, quick = false) {
-        if (busy) return;
+        if (busy) {
+          if (quick) pending += step;
+          return;
+        }
         busy = true;
         clearTimeout(timer);
-        index = (index + step + order.length) % order.length;
+        index = (((index + step) % order.length) + order.length) % order.length;
         await load(back, order[index]);
         frame.classList.toggle('is-quick', quick);
         await nextFrame();
@@ -396,7 +401,14 @@
         [front, back] = [back, front];
         // Fade the old photo out alongside the new one fading in.
         previous.classList.remove('is-ready');
-        setTimeout(() => { busy = false; }, quick ? QUICK_FADE_MS : FADE_MS);
+        setTimeout(() => {
+          busy = false;
+          if (pending) {
+            const queued = pending;
+            pending = 0;
+            go(queued, true);
+          }
+        }, quick ? QUICK_FADE_MS : FADE_MS);
         schedule();
       }
 
@@ -431,6 +443,8 @@
           await nextFrame();
           front.classList.add('is-front', 'is-ready');
           frame.title = order[0].alt;
+          // Drop taps from before the first photo showed up.
+          pending = 0;
           busy = false;
           schedule();
         }, Math.max(0, PHOTO_TURN_MS - performance.now()));
