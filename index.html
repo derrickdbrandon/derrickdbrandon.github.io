@@ -412,11 +412,17 @@
         schedule();
       }
 
+      // Drop focus after a mouse or touch click (detail is 0 for Enter/Space), or the
+      // next arrow key press makes the browser draw a focus ring around the button.
+      const step = (event, by) => {
+        if (event.detail > 0) event.currentTarget.blur();
+        go(by, true);
+      };
       const navButtons = document.querySelectorAll('.slide-nav');
-      navButtons[0].addEventListener('click', () => go(-1, true));
-      navButtons[1].addEventListener('click', () => go(1, true));
+      navButtons[0].addEventListener('click', (event) => step(event, -1));
+      navButtons[1].addEventListener('click', (event) => step(event, 1));
       document.querySelectorAll('.control.step').forEach((button) => {
-        button.addEventListener('click', () => go(Number(button.dataset.step), true));
+        button.addEventListener('click', (event) => step(event, Number(button.dataset.step)));
       });
 
       // Leave modified arrows alone, since browsers use Alt/Cmd+Left for back.
