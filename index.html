@@ -403,6 +403,13 @@
         button.addEventListener('click', () => go(Number(button.dataset.step), true));
       });
 
+      // Leave modified arrows alone, since browsers use Alt/Cmd+Left for back.
+      document.addEventListener('keydown', (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        if (event.key === 'ArrowLeft') go(-1, true);
+        else if (event.key === 'ArrowRight') go(1, true);
+      });
+
       const renderToggle = () => {
         toggle.querySelector('.icon-pause').style.display = paused ? 'none' : '';
         toggle.querySelector('.icon-play').style.display = paused ? '' : 'none';
