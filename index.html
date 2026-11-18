@@ -313,6 +313,7 @@
           <span class="sr-only">next photo</span>
         </button>
       </div>
+      <p class="sr-only" aria-live="polite"></p>
     </figure>
     <script>
       const images = [
@@ -349,6 +350,7 @@
       const frame = document.querySelector('.photo-frame');
       let [front, back] = frame.querySelectorAll('img');
       const toggle = document.querySelector('.slideshow-toggle');
+      const announcer = document.querySelector('.photo [aria-live]');
       let index = 0;
       let timer = null;
       // Ignore clicks until the first photo is in and while a crossfade is running.
@@ -385,6 +387,8 @@
         back.classList.add('is-front', 'is-ready');
         // On the frame rather than the img, since the nav buttons cover the img.
         frame.title = order[index].alt;
+        // Only announce changes someone asked for; reading out every auto-advance would be noisy.
+        if (quick) announcer.textContent = order[index].alt;
         back.removeAttribute('aria-hidden');
         front.classList.remove('is-front');
         front.setAttribute('aria-hidden', 'true');
